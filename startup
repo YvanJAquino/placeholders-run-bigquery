@@ -1,0 +1,3 @@
+#!/bin/bash
+./bq-proxy &
+npm run start:container

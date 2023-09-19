@@ -1,0 +1,39 @@
+#!/bin/bash
+
+export IMAGE="testing.ph-solidjs-frontend"
+export PROXY_HOST="127.0.0.1"
+export PROXY_PORT="9080"
+export PROJECT_ID="holy-diver-297719"
+export DATASET_ID="testing"
+export TABLE_ID="gsa_placeholder_testing"
+
+
+docker:build() {
+    docker build -t $IMAGE .
+}
+
+docker:run() {
+    docker run -it --rm --network=host "$@" $IMAGE 
+}
+
+docker:run-shell() {
+    docker run -it --rm --network=host "$@" $IMAGE /bin/bash
+}
+
+proxy:fetch() {
+    gsutil cp gs://holy-diver-297719/bq-proxy .
+    chmod +x bq-proxy
+}
+
+deactivate() {
+    unset IMAGE
+    unset PROXY_HOST
+    unset PROXY_PORT
+    unset PROJECT_ID
+    unset DATASET_ID
+    unset TABLE_ID
+    unset -f docker:build
+    unset -f docker:run
+    unset -f docker:run-shell
+    unset -f proxy:fetch
+}
