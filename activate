@@ -1,4 +1,9 @@
 #!/bin/bash
+
+deactivate;
+
+echo "[DEV-MODE] Loading environment variables and helper functions..."
+echo "[DEV-MODE] Use 'deactivate' to return to normal"
 export SERVICE="placeholders-run-bigquery"
 export REPO_REGION="us"
 export PROXY_HOST="127.0.0.1"
@@ -22,20 +27,26 @@ docker:run-shell() {
     docker run -it --rm --network=host "$@" $IMAGE /bin/bash
 }
 
-proxy:fetch() {
-    gsutil cp gs://holy-diver-297719/bq-proxy .
-    chmod +x bq-proxy
-}
+# proxy:fetch() {
+#     yaquino: move this to a public bucket...!  or even better...
+      # bring in the source code (source is 12kb; bq-proxy is 19.7MB!)
+#     gsutil cp gs://holy-diver-297719/bq-proxy .
+#     chmod +x bq-proxy
+# }
 
 deactivate() {
-    unset IMAGE
+    unset SERVICE
+    unset REPO_REGION
     unset PROXY_HOST
     unset PROXY_PORT
     unset PROJECT_ID
     unset DATASET_ID
     unset TABLE_ID
+    unset IMAGE
+
     unset -f docker:build
     unset -f docker:run
     unset -f docker:run-shell
     unset -f proxy:fetch
+    unset -f deactivate
 }

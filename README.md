@@ -29,8 +29,7 @@ This application uses various technologies and techniques to deliver a secure an
 
 ```
 server {
-    # Listen on 8080 for Cloud Run!!!
-    listen       3000;
+    listen       8080;
     server_name  localhost;
 
 
@@ -56,6 +55,27 @@ server {
 
 }
 ```
+
+## Preparing for Deployment
+
+- Review and update `.env` file which contains 3 environment variables that are turned into strings **[static]** during the build process.  These variables are  control which project, dataset, and table are used when querying BQ.  
+  - VITE_PROJECT_ID
+  - VITE_DATASET_ID
+  - VITE_TABLE_ID
+
+- Review the ENV environment variables in the Dockerfile and update the PROJECT_ID, DATASET_ID, and TABLE_ID.  These control various parts of the application:
+  - PROXY_HOST **DO NOT TOUCH**
+  - PROXY_PORT **DO NOT TOUCH**
+  - PROJECT_ID 
+  - DATASET_ID
+  - TABLE_ID
+
+Deployment is now managed by Cloud Build:
+
+```shell
+gcloud builds submit
+```
+
 
 ## Building the solution
 
