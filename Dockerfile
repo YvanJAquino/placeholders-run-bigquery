@@ -2,7 +2,7 @@
 # into HTML, CSS, and JS.  The built output is available from the /dist directory.
 FROM    node:20-bullseye AS builder
 WORKDIR /app
-COPY    package*.json .
+COPY    package*.json ./
 RUN     npm i --silent
 COPY    . .
 RUN     npm run build

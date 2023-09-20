@@ -1,4 +1,3 @@
-# Yvan: You need to update the repositories!
 
 steps:
 - id: docker-build-push-placeholders-run-bigquery
@@ -9,10 +8,8 @@ steps:
     - -c
     - |
       export IMAGE=${_REPO_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}
-      docker build -t ${_REPO_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE} . &&
-      docker push gcr.io/$PROJECT_ID/${_SERVICE}
-      echo $$IMAGE
-      echo $$IMAGE
+      docker build -t $$IMAGE . &&
+      docker push $$IMAGE
 
 - id: gcloud-run-deploy-placeholders-run-bigquery
   waitFor: ['docker-build-push-placeholders-run-bigquery']
@@ -26,9 +23,8 @@ steps:
         --image gcr.io/$PROJECT_ID/${_SERVICE} \
         --timeout 5m \
         --region ${_REGION} \
-        --no-cpu-throttling \
         --min-instances 0 \
-        --max-instances 5 \
+        --max-instances 1 \
         --allow-unauthenticated
 
 substitutions:
