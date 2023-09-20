@@ -26,11 +26,13 @@ COPY    bq-proxy /usr/bin
 COPY    nginx.conf /etc/nginx/conf.d/default.conf
 # Create a startup script that runs bq-proxy as a background process
 # Make it executable.
-RUN     cat <<EOF > /home/startup
-	#!/bin/bash
-	bq-proxy &
-	exec nginx -g "daemon off;"
-EOF
+# # Removing this heredoc, it's causing CB issues
+# RUN     cat <<EOF > /home/startup
+# 	#!/bin/bash
+# 	bq-proxy &
+# 	exec nginx -g "daemon off;"
+# EOF
+COPY 	startup /home/startup
 RUN     chmod +x /home/startup
 # Use this script 
 CMD     ["./home/startup"]
