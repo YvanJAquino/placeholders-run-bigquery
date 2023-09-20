@@ -1,12 +1,14 @@
 #!/bin/bash
-
-export IMAGE="testing.ph-solidjs-frontend"
+export SERVICE="placeholders-run-bigquery"
+export REPO_REGION="us"
 export PROXY_HOST="127.0.0.1"
 export PROXY_PORT="9080"
 export PROJECT_ID="holy-diver-297719"
 export DATASET_ID="testing"
 export TABLE_ID="gsa_placeholder_testing"
 
+export IMAGE="$REPO_REGION-docker.pkg.dev/$PROJECT_ID/containers/$SERVICE"
+echo "IMAGE has been set to: $IMAGE"
 
 docker:build() {
     docker build -t $IMAGE .

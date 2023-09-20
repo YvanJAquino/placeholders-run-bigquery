@@ -18,9 +18,10 @@ steps:
   args:
     - -c
     - |
+      export IMAGE=${_REPO_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}
       gcloud run deploy ${_SERVICE} \
         --project $PROJECT_ID \
-        --image gcr.io/$PROJECT_ID/${_SERVICE} \
+        --image $$IMAGE \
         --timeout 5m \
         --region ${_REGION} \
         --min-instances 0 \

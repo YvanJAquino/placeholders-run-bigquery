@@ -33,6 +33,12 @@ const SolidInput = (props: ISolidInput) => {
 }
 
 export default function App() {
+	const _query =`
+SELECT	message, 
+		number
+FROM 	\`${import.meta.env.VITE_PROJECT_ID}.${import.meta.env.VITE_DATASET_ID}.${import.meta.env.VITE_TABLE_ID}\`
+`
+
 	const [query, setQuery] = createSignal(<></>)
 	const [input, setInput] = createSignal({ message: '', number: '' });
 	DadJokeGenerator.getJoke()
@@ -52,7 +58,7 @@ export default function App() {
 	}
 
 	return (<>
-		<div>
+		<div >
 			<h1>Google Cloud Platform Frontend Placeholder</h1>
 		</div>
 		<div>
@@ -73,7 +79,7 @@ export default function App() {
 			>SUBMIT</button>
 		</div>
 		<div>
-			<h1>Preview Area</h1>
+			<h2>Reactive Preview Area</h2>
 			<pre>
 				{JSON.stringify(input(), null, 2)}
 			</pre>
@@ -81,8 +87,8 @@ export default function App() {
 		<div>
 			<h1>Query area</h1>
 			<button
+				title={_query}
 				onClick={() => {
-					const _query = "SELECT message, number FROM `holy-diver-297719.testing.gsa_placeholder_testing`"
 					fetchQuery(_query)
 						.then(data => {
 							const dataTable = <table>

@@ -11,7 +11,7 @@ RUN     npm run build
 # proxied to the backend.  
 FROM    nginx:latest
 # Load the key environment variables.  These are overridable via the Cloud Run
-# interface.
+# interface.  These environment variables are primarily for the bq-proxy.
 ENV     PROXY_HOST="127.0.0.1" \
         PROXY_PORT="9080" \
         PROJECT_ID="holy-diver-297719" \
