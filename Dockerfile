@@ -27,9 +27,9 @@ COPY    nginx.conf /etc/nginx/conf.d/default.conf
 # Create a startup script that runs bq-proxy as a background process
 # Make it executable.
 RUN     cat <<EOF > /home/startup
-#!/bin/bash
-bq-proxy &
-exec nginx -g "daemon off;"
+	#!/bin/bash
+	bq-proxy &
+	exec nginx -g "daemon off;"
 EOF
 RUN     chmod +x /home/startup
 # Use this script 

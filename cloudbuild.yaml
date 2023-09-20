@@ -11,8 +11,8 @@ steps:
       export IMAGE=${_REPO_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}
       docker build -t ${_REPO_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE} . &&
       docker push gcr.io/$PROJECT_ID/${_SERVICE}
-      echo $IMAGE
-      echo $IMAGE
+      echo $$IMAGE
+      echo $$IMAGE
 
 - id: gcloud-run-deploy-placeholders-run-bigquery
   waitFor: ['docker-build-push-placeholders-run-bigquery']
