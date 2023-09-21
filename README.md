@@ -1,16 +1,12 @@
 # placeholders-run-bigquery
-placeholders-run-bigquery is a pre-built barebones web application that's integrated with BigQuery.  
+placeholders-run-bigquery is a pre-built barebones web application that's integrated with BigQuery.  It's sole purpose is to provide a working example of a real life application that would use external APIs (this application uses the icanhazdadjoke API as an external data provider) as well as internal GCP services (such as BigQuery) to deliver a specific capability.  
 
-It's sole purpose is to provide a working example of a real life application that would use external APIs (this application uses the icanhazdadjoke API as an external data provider) as well as internal GCP services (such as BigQuery) to deliver a specific capability.  
+- placeholders-run-bigquery dynamically fetches Dad Jokes from the icanhazdadjoke API and then generates a random number to make it easy for users to submit.  You can override the joke with your own text and watch the reactive updates (ooh so exciting ... :-/)
 
-placeholders-run-bigquery dynamically fetches Dad Jokes from the icanhazdadjoke API and then generates a random number to make it easy for users to submit.  
-
-There is a query area under the "submit" button; when the query is ran, all of the current data in the existing BigQuery table presented as a table in the web app.  
+- There is a query area under the "submit" button; when the query is ran, all of the current data in the existing BigQuery table presented as a table in the web app.  (my formatting | such wow )
 
 ## Architecture
-The source in this repo represents the top line in the diagram below:  Cloud Run + BigQuery - the actual "core" of the running application.  
-
-How the source is converted from "source" into a containerized web application is represented by the bottom portion of the architecture.  
+The source in this repo represents the top line in the diagram below:  Cloud Run + BigQuery - the actual "core" of the running application.  How the source is converted from "source" into a containerized web application is represented by the bottom portion of the architecture.  
 
 ![Alt text](data-driven-web-apps.jpg)
 
