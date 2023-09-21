@@ -42,4 +42,4 @@ substitutions:
   _REPO: containers
   _DATASET_ID: testing
   _TABLE_ID: gsa_placeholder_testing
-  _SERVICE_ACCOUNT: 
+  _SERVICE_ACCOUNT: ~
