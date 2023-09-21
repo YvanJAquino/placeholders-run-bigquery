@@ -85,7 +85,7 @@ FROM 	\`${import.meta.env.VITE_PROJECT_ID}.${import.meta.env.VITE_DATASET_ID}.${
 			</pre>
 		</div>
 		<div>
-			<h1>Query area</h1>
+			<h2>Query area</h2>
 			<button
 				title={_query}
 				onClick={() => {
@@ -115,7 +115,7 @@ FROM 	\`${import.meta.env.VITE_PROJECT_ID}.${import.meta.env.VITE_DATASET_ID}.${
 			>
 				Fetch Data!
 			</button>
-			<h1>Query Result</h1>
+			<h2>Query Result</h2>
 			{query()}
 		</div>
 	</>)

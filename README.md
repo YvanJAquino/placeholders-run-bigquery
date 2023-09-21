@@ -56,38 +56,51 @@ server {
 }
 ```
 
-## Preparing for Deployment
+## Deployment
 
-- Review and update `.env` file which contains 3 environment variables that are turned into strings **[static]** during the build process.  These variables are  control which project, dataset, and table are used when querying BQ.  
-  - VITE_PROJECT_ID
-  - VITE_DATASET_ID
-  - VITE_TABLE_ID
+Deployment is now entirely managed by Cloud Build.  
 
-- Review the ENV environment variables in the Dockerfile and update the PROJECT_ID, DATASET_ID, and TABLE_ID.  These control various parts of the application:
-  - PROXY_HOST **DO NOT TOUCH**
-  - PROXY_PORT **DO NOT TOUCH**
-  - PROJECT_ID 
-  - DATASET_ID
-  - TABLE_ID
+Before invoking the following command, review the bottom of `cloudbuild.yaml` where the substitution variables are defined and update to match your particular environment.  Note that $PROJECT_ID does not require an update; this variable is injected for you by the Cloud Build service.  
 
-Deployment is now managed by Cloud Build:
+```yaml
+substitutions:
+  # _SERVICE: Cloud Run Service name
+  _SERVICE: my-cloud-run-services-name
+  # _REGION: Cloud Run Service region
+  _REGION: us-central1
+  # _REPO_REGION: Artifact Registry Container Registry Region
+  _REPO_REGION: us
+  # _REPO: Artifact Registry Container Registry Name
+  _REPO: containers
+  # _DATASET_ID: BigQuery DatasetID
+  _DATASET_ID: my-bigquery-dataset-id
+  # _TABLE_ID: BigQuery TableID
+  _TABLE_ID: my-bigquery-table-id
+  # _SERVICE_ACCOUNT: Cloud Run Service Service Account.  Supply this at build time via substitutions or
+  # replace the ~ with your service account.  
+  _SERVICE_ACCOUNT: ~
+```
+
+The invoking principal [user, developer, admin, etc.] must supply the Cloud Run service's service account via the --substitusions flag or the build will fail UNLESS the _SERVICE_ACCOUNT placeholder (~) is replaced with the desired service account.  
 
 ```shell
-gcloud builds submit
+gcloud builds submit --substitutions _SERVICE_ACCOUNT=ye-olde-svc-acct@iam.gserviceaccount.com
 ```
 
 
-## Building the solution
+## About
 
-Building and deploying the application is done with Cloud Build (CB), GCP's serverless CI / CD solution.  
+Building and deploying the application is done with Cloud Build (CB), GCP's serverless CI / CD solution.  CB is mix of containers, linux scripting, and Google magic that's fun and easy use.  
 
 Cloud Build combines linux scripting with containers so that you can define and pipeline build stage artifacts into deployable assets.  Cloud Build pipelines are defined in yaml and built in 'steps' which can run in parallel.  Files can be excluded from the build submission with a `.gcloudignore` file which works identically to other .*ignore files such as .gitignore and .dockerignore.  
 
-From the root directoy, the pipeline is invoked at the CLI with `gcloud builds submit`. 
+From the root directoy, the pipeline is invoked at the CLI with `gcloud builds submit` command family (see Deployment for details). 
 
 This is a very simple two step pipeline: build and then deploy.
-- Step 1 (`docker-build-push-placeholders-run-bigquery`) is responsible for building the application container and then pushing it to the Artifact Registry where the container will actually 'live'.  This is 100% linux scripting
-- Step 2 (`gcloud-run-deploy-placeholders-run-bigquery`) is resopnsible for deploying the actual container itself to Cloud Run.  This container uses a gcloud base image to run gcloud commands in an ephemeral container responsible for the actual deployment fo the container. It is also 100% linux scripting.
+- Step 1 (`docker-build-push-placeholders-run-bigquery`) is responsible for building the application container and then pushing it to the Artifact Registry where the container will actually 'live'. To streamline deployments in other environments, a .env file is dynamically generated based on the supplied substitution variables (please see `cloudbuild.yaml` for details).  This .env file is converted to strings during the frontends build stage.  
+
+
+- Step 2 (`gcloud-run-deploy-placeholders-run-bigquery`) is resopnsible for deploying the actual container itself to Cloud Run.  This container uses a gcloud base image to run gcloud commands in an ephemeral container responsible for the actual deployment fo the container. It is also 100% linux scripting.  Environment variables are set at the Cloud Run Service to allow for management at the service level (as opposed to the Docker container level)
 
 Extra steps can be added that are responsible for SAST and DAST and other common CI/CD techniques and technologies.  
 
@@ -99,3 +112,5 @@ Extra steps can be added that are responsible for SAST and DAST and other common
   - You don't need to worry about configuring Nginx as an SSL terminator; the Cloud Run service itself is responsible for managing certificates for you (IE Cloud Run terminates SSL for you!).  If you really want to manage certificates, you can put the Clodu Run service itself behind a load balancer and manage those SSL policies as per your requirements!
 
 
+## TIL: Today I learned.
+- The Cloud Run service's service account will not work with roles/bigquery.user;  roles/bigquery.dataEditor at the PROJECT level is the appropriate resource
