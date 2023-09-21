@@ -56,6 +56,21 @@ server {
 }
 ```
 
+## Setup
+- BigQuery:  Visit BigQuery and create a Dataset (or reuse an existing one) and then create a table using DDL statement below.  Make sure to do this from the same project that'll host your Cloud Run Service:
+
+```sql
+-- replace DATASET_ID with your datasetID and TABLE_ID with your tableID
+CREATE OR REPLACE TABLE DATASET_ID.TABLE_ID (
+  message STRING,
+  number STRING
+)
+```
+
+- IAM.  Visit IAM & Admin > Service Accounts and create a new service account that your Cloud Run Service will use.  Grant that service account `roles/bigquery.dataEditor`. If, by chance, you forget to do that last step, you can use IAM & Admin > IAM > Grant Access dialogue where you'll supply the service account as the principal and then add `roles/bigquery.dataEditor`.  
+
+Yeah, that happens to everyone, especially if your rushing.  
+
 ## Deployment
 
 Deployment is now entirely managed by Cloud Build.  
