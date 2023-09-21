@@ -7,7 +7,12 @@ steps:
   args:
     - -c
     - |
-      export IMAGE=${_REPO_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}
+      cat <<EOF > .env
+      VITE_PROJECT_ID=$PROJECT_ID
+      VITE_DATASET_ID=${_DATASET_ID}
+      VITE_TABLE_ID=${_TABLE_ID}
+      EOF
+      IMAGE=${_REPO_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}
       docker build -t $$IMAGE . &&
       docker push $$IMAGE
 
@@ -18,7 +23,7 @@ steps:
   args:
     - -c
     - |
-      export IMAGE=${_REPO_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}
+      IMAGE=${_REPO_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_SERVICE}
       gcloud run deploy ${_SERVICE} \
         --project $PROJECT_ID \
         --image $$IMAGE \
@@ -26,10 +31,13 @@ steps:
         --region ${_REGION} \
         --min-instances 0 \
         --max-instances 1 \
-        --allow-unauthenticated
+        --allow-unauthenticated \
+        --set-env-vars=PROJECT_ID=$PROJECT_ID,DATASET_ID=${_DATASET_ID},TABLE_ID=${_TABLE_ID}
 
 substitutions:
   _SERVICE: placeholders-run-bigquery
   _REGION: us-central1
   _REPO_REGION: us
   _REPO: containers
+  _DATASET_ID: testing
+  _TABLE_ID: gsa_placeholder_testing

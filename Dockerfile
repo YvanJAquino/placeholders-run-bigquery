@@ -13,10 +13,7 @@ FROM    nginx:latest
 # Load the key environment variables.  These are overridable via the Cloud Run
 # interface.  These environment variables are primarily for the bq-proxy.
 ENV     PROXY_HOST="127.0.0.1" \
-        PROXY_PORT="9080" \
-        PROJECT_ID="holy-diver-297719" \
-        DATASET_ID="testing" \
-        TABLE_ID="gsa_placeholder_testing"
+        PROXY_PORT="9080"
 # Copy the compiled HTML/JS from /app/dist        
 COPY    --from=builder /app/dist /usr/share/nginx/html
 # Copy the bq-proxy into /usr/bin.  Alternatively, this can be built in another
